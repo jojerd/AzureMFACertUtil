@@ -27,6 +27,10 @@ The first option will then prompt you to log into your tenant and then pull the 
 It will then ask you if you would like to delete any certificates. Yes or No.
 If you select Yes it will then ask how you would like to delete them. Automatically or Manually.
 
+The second option will proceed to prompt you on how you would like to proceed with certificate deletion.
+Automatically, or Manually. Same behavior as before just provides a direct way to go straight into
+certificate deletion without going through the retrieval first.
+
 # WARNING
 Automatically will delete ANY certificate that is currently expired. This can break your environment (Azure MFA or NPS)
 if you are not sure what you are doing. It will prompt you to ask if you are absolutely sure that you would like to proceed.
