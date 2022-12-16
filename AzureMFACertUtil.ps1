@@ -91,7 +91,8 @@ function Get-MSOLServiceConnection {
         }
     }
 }
-
+# Prompt user if they are absolutely sure they with to delete certificates automatically.
+# Also prompt a warning detailing ramifications of automatic certificate deletion.
 function Get-Confirmation {
     begin {
         write-log -String "Prompting user if they are sure they want to automatically remove all expired certificates" -Name $Logname
@@ -230,8 +231,6 @@ function Remove-CertsManual {
         Write-Log -String "Prompting user for KeyId of Certificate to removed" -Name $Logname
         $KeyId = Read-Host -Prompt "KeyId of Certificate to delete"
         Write-Log -String "User entered KeyId: $($KeyId)" -Name $Logname
-        #$RemoveCert = Get-MsolServicePrincipalCredential -AppPrincipalId 981f26a1-7f43-403b-a875-f8b09b8cd720 -ReturnKeyValues 1 | Where-Object {$_.KeyId -like "$KeyId" }
-        #Write-Log -String "$($RemoveCert.KeyId) returned from lookup" -Name $Logname
         Try {
             Write-Log -String "Attempting to delete certificate with KeyId of $($KeyId)" -Name $Logname
             Remove-MsolServicePrincipalCredential -AppPrincipalId 981f26a1-7f43-403b-a875-f8b09b8cd720 -KeyIds $KeyId
@@ -298,7 +297,7 @@ function Remove-CertsAutomatic {
     }
     
 }
-
+# Get User input function on how they would like to proceed.
 function Get-UserInput {
     begin {
         write-log -String "Prompting user if they would like to remove any certificates" -Name $Logname
@@ -412,10 +411,10 @@ function Get-CurrentCertificates {
     else {
         Write-Host "No expired certificates found" -ForegroundColor Green
     }
-
+    # Let user know how many of each Valid / Expired certificates as well as total certificates found.
     Write-Host "Found $($ValidCreds.count) Valid certificates."
     Write-Log -String "Found $($ValidCreds.count) Valid certificates" -Name $Logname
-    Write-Host "Found $($ExpiredCreds.count) Expired certificates"
+    Write-Host "Found $($ExpiredCreds.count) Expired certificates."
     Write-Log -String "Found $($ExpiredCreds.count) Expired certificates" -Name $Logname
     Write-Log -String "Total number of Certificates found: $($Credentials.count)" -Name $Logname
     Write-host "Total number of Certificates found: $($Credentials.count)" -ForegroundColor Yellow
@@ -430,6 +429,7 @@ function Get-CurrentCertificates {
 Write-Log -String "*********************************************************" -Name $Logname
 Write-log -String "*                      START SCRIPT                     *" -Name $Logname
 Write-log -String "*********************************************************" -Name $Logname
+# Get executing user details for logging purposes.
 $ExecutingUser = [Security.Principal.WindowsIdentity]::GetCurrent().Name
 Write-Log -String "User Executing Script $($ExecutingUser)" -Name $Logname
 function Start-Menu {
